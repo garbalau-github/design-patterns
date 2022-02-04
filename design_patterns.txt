@@ -1,0 +1,5 @@
+Design Pattern Types:
+
+- Structural (how objects are related to each other)
+- Creational (how the objects are instantiated and created)
+- Behavioral (how the objects commnunicate between each other)
