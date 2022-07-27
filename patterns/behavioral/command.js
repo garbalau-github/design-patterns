@@ -1,24 +1,22 @@
 /**
- * Command pattern - is a behavioral design pattern in which an object is used to
- * encapsulate all information needed to perform an action or trigger an event at a later time.
- * This information includes the method name, the object that owns the method and
- * values for the method parameters.
+ * Command pattern is a behavioral design pattern in which an object is used to
+ * encapsulate all information needed to perform an action or
+ * trigger an event at a later time. This information includes the method name,
+ * the object that owns the method and values for the parameters.
  */
 
-// Calculator
 class Calculator {
   constructor() {
     this.value = 0;
     this.history = [];
   }
-
   executeCommand(command) {
     this.value = command.execute(this.value);
     this.history.push(command);
   }
-
   undo() {
-    const command = this.history.pop(); // Returns last element
+    // Returns last element
+    const command = this.history.pop();
     this.value = command.undo(this.value);
   }
 }
@@ -27,11 +25,9 @@ class AddCommand {
   constructor(value) {
     this.value = value;
   }
-
   execute(curValue) {
     return curValue + this.value;
   }
-
   undo(curValue) {
     return curValue - this.value;
   }
@@ -41,11 +37,9 @@ class SubtractCommand {
   constructor(value) {
     this.value = value;
   }
-
   execute(curValue) {
     return curValue - this.value;
   }
-
   undo(curValue) {
     return curValue + this.value;
   }
@@ -55,11 +49,9 @@ class MultiplyCommand {
   constructor(value) {
     this.value = value;
   }
-
   execute(curValue) {
     return curValue * this.value;
   }
-
   undo(curValue) {
     return curValue / this.value;
   }
@@ -69,40 +61,41 @@ class DivideCommand {
   constructor(value) {
     this.value = value;
   }
-
   execute(curValue) {
     return curValue / this.value;
   }
-
   undo(curValue) {
     return curValue * this.value;
   }
 }
 
-// Combination Command
+// Combination (AddCommand + MultiplyCommand)
 class AddThenMultiplyCommand {
   constructor(valueToAdd, valueToMultiply) {
     this.AddCommand = new AddCommand(valueToAdd);
     this.MultiplyCommand = new MultiplyCommand(valueToMultiply);
   }
-
   execute(curValue) {
-    // Adding
+    // Add
     const newValue = this.AddCommand.execute(curValue);
-    // Multiplying
+    // Multiply
     return this.MultiplyCommand.execute(newValue);
   }
-
   undo(curValue) {
-    // Undoing Multiplying
+    // Undo Multiply
     const newValue = this.MultiplyCommand.undo(curValue);
-    // Undoing Adding
+    // Undo Add
     return this.AddCommand.undo(newValue);
   }
 }
 
+// Instance of Calculator
 const calculator = new Calculator();
+
+// Run command
 calculator.executeCommand(new AddThenMultiplyCommand(10, 2));
-console.log(calculator.value);
+
+// Log results
+console.log(calculator.value); // 20
 calculator.undo();
-console.log(calculator.value);
+console.log(calculator.value); // 0
